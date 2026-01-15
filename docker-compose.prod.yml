@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  qwen-free-api:
+    container_name: qwen-free-api-new
+    # 使用已发布的镜像
+    image: akashrajpuroh1t/qwen-free-api-fix:latest
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - TZ=Asia/Shanghai
+      - NODE_ENV=production
+    volumes:
+      # 挂载配置文件目录（可选）
+      - ./configs:/app/configs:ro
+    networks:
+      - qwen-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8000/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  qwen-network:
+    driver: bridge

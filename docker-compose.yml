@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  qwen-free-api:
+    container_name: qwen-free-api-new
+    # 使用本地 Dockerfile 构建镜像
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # 或者使用已发布的镜像（二选一，注释掉 build 部分）
+    # image: akashrajpuroh1t/qwen-free-api-fix:latest
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      # 时区设置
+      - TZ=Asia/Shanghai
+      # Node.js 环境
+      - NODE_ENV=production
+    volumes:
+      # 挂载配置文件目录（可选，如需自定义配置）
+      - ./configs:/app/configs:ro
+      # 挂载日志目录（可选）
+      # - ./logs:/app/logs
+    networks:
+      - qwen-network
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8000/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # 资源限制（可选）
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  qwen-network:
+    driver: bridge
+
+# 可选：添加卷定义用于持久化数据
+# volumes:
+#   qwen-logs:
+#     driver: local

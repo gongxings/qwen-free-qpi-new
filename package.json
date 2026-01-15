@@ -1,7 +1,7 @@
 {
-  "name": "qwen-free-api-fix",
+  "name": "qwen-free-api-new",
   "version": "1.0.1",
-  "description": "Qwen Free API Server",
+  "description": "Qwen Free API New Server",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -45,5 +45,8 @@
     "@types/mime": "^3.0.4",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
